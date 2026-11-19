@@ -1,0 +1,21 @@
+# Local development database for Shirori.
+# Start:  podman compose -f infrastructure/docker/compose.yaml up -d
+name: shirori
+services:
+  postgres:
+    image: docker.io/library/postgres:17-bookworm
+    environment:
+      POSTGRES_USER: shirori
+      POSTGRES_PASSWORD: shirori
+      POSTGRES_DB: shirori
+    ports:
+      - "127.0.0.1:55432:5432"
+    volumes:
+      - shirori-pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shirori"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+volumes:
+  shirori-pg:
